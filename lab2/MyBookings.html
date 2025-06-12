@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Мої бронювання</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="index.html"> Головна</a></li>
+            <li><a href="AvailableApartments.html"> Доступні квартири</a></li>
+            <li><a href="MyBookings.html"> Мої бронювання</a></li>
+            <li><a href="Contacts.html"> Контакти</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <div class="booking-list">
+        <h2>Ваші бронювання</h2>
+        <div id="bookings-container">
+            <p>Завантаження...</p>
+        </div>
+        <button class="download-button" onclick="downloadBookings()">⬇️ Завантажити бронювання у файл</button>
+    </div>
+</main>
+
+<footer>
+    <a> Контактна інформація: buhilvy@gmail.com | +38 068 351 1546</a>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('bookings-container');
+        const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+
+        container.innerHTML = '';
+
+        if (bookings.length === 0) {
+            container.innerHTML = '<p>Поки що немає бронювань.</p>';
+        } else {
+            bookings.forEach((booking, index) => {
+                const item = document.createElement('div');
+                item.className = 'booking-item';
+                item.innerHTML = `
+                    <strong>Квартира:</strong> ${booking.apartment}<br>
+                    <strong>Ім'я:</strong> ${booking.name}<br>
+                    <strong>Телефон:</strong> ${booking.phone}<br>
+                    <strong>Email:</strong> ${booking.email}<br>
+                    <strong>Коментар:</strong> ${booking.message}
+                `;
+                container.appendChild(item);
+            });
+        }
+    });
+
+    function downloadBookings() {
+        const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+        if (bookings.length === 0) {
+            alert("Немає збережених бронювань.");
+            return;
+        }
+
+        let content = '';
+        bookings.forEach((b, i) => {
+            content += `Бронювання #${i + 1}:
+`;
+            content += `Ім'я: ${b.name}
+`;
+            content += `Email: ${b.email}
+`;
+            content += `Телефон: ${b.phone}
+`;
+            content += `Квартира: ${b.apartment}
+`;
+            content += `Коментар: ${b.message}
+
+`;
+        });
+
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Мої_бронювання.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('bookings-container');
+        const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+
+        container.innerHTML = '';
+
+        if (bookings.length === 0) {
+            container.innerHTML = '<p>Поки що немає бронювань.</p>';
+        } else {
+            bookings.forEach((b, i) => {
+                const item = document.createElement('div');
+                item.innerHTML = `
+          <h3>Бронювання #${i + 1}</h3>
+          <p><strong>Імʼя:</strong> ${b.name}</p>
+          <p><strong>Email:</strong> ${b.email}</p>
+          <p><strong>Телефон:</strong> ${b.phone}</p>
+          <p><strong>Квартира:</strong> ${b.apartment}</p>
+          <p><strong>Коментар:</strong> ${b.message}</p>
+          <hr>
+        `;
+                container.appendChild(item);
+            });
+        }
+    });
+</script>
+
+
+</body>
+</html>
